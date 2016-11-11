@@ -11,7 +11,7 @@
         <catalog translate="title" module="catalog">
             <children>
                 <warehouse translate="title" module="mc_warehouse">
-                    <title>Warehouse</title>
+                    <title>Manage Warehouse</title>
                     <action>adminhtml/warehouse/</action>
                     <sort_order>20</sort_order>
                 </warehouse>
