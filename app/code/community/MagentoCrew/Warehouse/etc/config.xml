@@ -49,4 +49,26 @@
             </mc_warehouse_setup>
         </resources>
     </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <warehouse after="Mage_Adminhtml">MagentoCrew_Warehouse_Adminhtml</warehouse>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <translate>
+            <modules>
+                <MagentoCrew_Warehouse>
+                    <files>
+                        <default>MagentoCrew_Warehouse.csv</default>
+                    </files>
+                </MagentoCrew_Warehouse>
+            </modules>
+        </translate>
+    </adminhtml>
 </config>
