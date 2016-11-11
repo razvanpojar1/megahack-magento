@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Warehouse Module
+ * @copyright   Copyright (c) 2016 MagentoCrew
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <MagentoCrew_Warehouse>
+            <version>1.0.0</version>
+        </MagentoCrew_Warehouse>
+    </modules>
+    <global>
+        <models>
+            <mc_warehouse>
+                <class>MagentoCrew_Warehouse_Model</class>
+            </mc_warehouse>
+        </models>
+        <helpers>
+            <mc_warehouse>
+                <class>MagentoCrew_Warehouse_Helper</class>
+            </mc_warehouse>
+        </helpers>
+        <blocks>
+            <mc_warehouse>
+                <class>MagentoCrew_Warehouse_Block</class>
+            </mc_warehouse>
+        </blocks>
+    </global>
+</config>

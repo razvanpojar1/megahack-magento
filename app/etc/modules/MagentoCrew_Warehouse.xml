@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <MagentoCrew_Warehouse>
+      <active>true</active>
+      <codePool>community</codePool>
+    </MagentoCrew_Warehouse>
+  </modules>
+</config>
