@@ -18,19 +18,19 @@
                 <class>MagentoCrew_Warehouse_Model</class>
                 <resourceModel>mc_warehouse_resource</resourceModel>
             </mc_warehouse>
+            <mc_warehouse_resource>
+                <class>MagentoCrew_Warehouse_Model_Resource</class>
+                <deprecatedNode>mc_warehouse_mysql4</deprecatedNode>
+                <entities>
+                    <warehouse>
+                        <table>warehouse</table>
+                    </warehouse>
+                    <warehouse_product>
+                        <table>warehouse_product</table>
+                    </warehouse_product>
+                </entities>
+            </mc_warehouse_resource>
         </models>
-        <mc_warehouse_resource>
-            <class>MagentoCrew_Warehouse_Model_Resource</class>
-            <deprecatedNode>mc_warehouse_mysql4</deprecatedNode>
-            <entities>
-                <warehouse>
-                    <table>warehouse</table>
-                </warehouse>
-                <warehouse_product>
-                    <table>warehouse_product</table>
-                </warehouse_product>
-            </entities>
-        </mc_warehouse_resource>
         <helpers>
             <mc_warehouse>
                 <class>MagentoCrew_Warehouse_Helper</class>
