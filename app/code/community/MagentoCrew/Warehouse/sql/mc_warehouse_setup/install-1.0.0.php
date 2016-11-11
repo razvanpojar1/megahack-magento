@@ -8,31 +8,70 @@
 $installer = $this;
 /* @var $installer Mage_Core_Model_Resource_Setup */
 
-$installer->run("CREATE TABLE `warehouse` (
-	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`name` VARCHAR(50) NOT NULL COLLATE 'utf8_bin',
-	`code` VARCHAR(50) NOT NULL COLLATE 'utf8_bin',
-	`email` VARCHAR(255) NOT NULL COLLATE 'utf8_bin',
-	`location` TEXT NOT NULL COLLATE 'utf8_bin',
-	PRIMARY KEY (`id`),
-	UNIQUE INDEX `code` (`code`)
-)
-COLLATE='utf8_bin'
-ENGINE=InnoDB
-;
+$tableNameWarehouse = $installer->getTable('mc_warehouse/warehouse');
 
-CREATE TABLE `warehouse_product` (
-	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`warehouse_id` INT(10) UNSIGNED NOT NULL,
-	`product_id` INT(10) UNSIGNED NOT NULL,
-	`stock_qty` INT(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	INDEX `FK_warehouse_catalog_product_entity` (`product_id`),
-	INDEX `FK_warehouse_product_warehouse` (`warehouse_id`),
-	CONSTRAINT `FK_warehouse_catalog_product_entity` FOREIGN KEY (`product_id`) REFERENCES `catalog_product_entity` (`entity_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT `FK_warehouse_product_warehouse` FOREIGN KEY (`warehouse_id`) REFERENCES `warehouse` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
-)
-COLLATE='utf8_bin'
-ENGINE=InnoDB
-;
-");
+if (!$installer->getConnection()->isTableExists($tableNameWarehouse)) {
+    /**
+     * Create table 'mc_warehouse/warehouse'
+     */
+    $tableWarehouse = $installer->getConnection()
+        ->newTable($tableNameWarehouse)
+        ->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+            'identity'  => true,
+            'unsigned'  => true,
+            'nullable'  => false,
+            'primary'   => true
+            ), 'Warehouse Id')
+        ->addColumn('name', Varien_Db_Ddl_Table::TYPE_VARCHAR, 50, array(
+            'nullable'  => false
+            ), 'Warehouse Name')
+        ->addColumn('code', Varien_Db_Ddl_Table::TYPE_VARCHAR, 50, array(
+            'nullable'  => false
+            ), 'Warehouse Code')
+        ->addColumn('email', Varien_Db_Ddl_Table::TYPE_VARCHAR, 255, array(
+            'nullable'  => false
+            ), 'Warehouse Email')    
+        ->addColumn('location', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
+            'nullable'  => false
+            ), 'Warehouse Location')
+        ->addIndex($installer->getIdxName('mc_warehouse/warehouse', array('id')),
+            array('id'))
+        ->addIndex($installer->getIdxName('mc_warehouse/warehouse', array('code')),
+            array('code'), array('type' => 'UNIQUE'))
+        ->setComment('Warehouse');
+    $installer->getConnection()->createTable($tableWarehouse);
+}
+
+$tableNameWarehouseProduct = $installer->getTable('mc_warehouse/warehouse_product');
+
+if (!$installer->getConnection()->isTableExists($tableNameWarehouseProduct)) {
+    /**
+     * Create table 'mc_warehouse/warehouse_product'
+     */
+    $tableWarehouseProduct = $installer->getConnection()
+        ->newTable($tableNameWarehouseProduct)
+        ->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+            'identity'  => true,
+            'unsigned'  => true,
+            'nullable'  => false,
+            'primary'   => true
+            ), 'Primary Id')
+        ->addColumn('warehouse_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+            'unsigned'  => true,
+            'nullable'  => false
+            ), 'Warehouse Id')
+        ->addColumn('product_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+            'unsigned'  => true,
+            'nullable'  => false
+            ), 'Product Id')
+        ->addForeignKey($installer->getFkName('mc_warehouse/warehouse_product', 'warehouse_id', 'mc_warehouse/warehouse', 'id'),
+            'warehouse_id', $installer->getTable('mc_warehouse/warehouse'), 'id',
+            Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
+        ->addForeignKey($installer->getFkName('mc_warehouse/warehouse_product', 'product_id', 'catalog/product', 'entity_id'),
+            'product_id', $installer->getTable('catalog/product'), 'entity_id',
+            Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
+        ->setComment('Warehouse Product');
+    $installer->getConnection()->createTable($tableWarehouseProduct);
+}
+
+$installer->endSetup();
