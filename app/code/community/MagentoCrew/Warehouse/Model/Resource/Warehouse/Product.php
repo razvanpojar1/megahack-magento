@@ -6,8 +6,11 @@
  */
 class MagentoCrew_Warehouse_Model_Resource_Warehouse_Product extends Mage_Core_Model_Resource_Db_Abstract
 {
+    /**
+     * Resource init
+     */
     protected function _construct()
     {
-        $this->_init('dataflow/import', 'import_id');
+        $this->_init('mc_warehouse/warehouse_product', 'id');
     }
 }

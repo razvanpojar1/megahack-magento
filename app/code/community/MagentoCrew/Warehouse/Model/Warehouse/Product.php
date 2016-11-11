@@ -6,5 +6,11 @@
  */
 class MagentoCrew_Warehouse_Model_Warehouse_Product extends Mage_Core_Model_Abstract
 {
-
+    /**
+     * Model init
+     */
+    public function _construct()
+    {
+        $this->_init('mc_warehouse/warehouse_product');
+    }
 }

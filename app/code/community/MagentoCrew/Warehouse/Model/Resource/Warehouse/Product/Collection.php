@@ -6,8 +6,11 @@
  */
 class MagentoCrew_Warehouse_Model_Resource_Warehouse_Product_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
+    /**
+     * Collection init
+     */
     protected function _construct()
     {
-        $this->_init('dataflow/profile');
+        $this->_init('mc_warehouse/warehouse_product');
     }
 }
