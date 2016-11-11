@@ -64,6 +64,10 @@ if (!$installer->getConnection()->isTableExists($tableNameWarehouseProduct)) {
             'unsigned'  => true,
             'nullable'  => false
             ), 'Product Id')
+        ->addColumn('stock_qty', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+            'unsigned'  => true,
+            'nullable'  => false
+            ), 'Stock qty')
         ->addForeignKey($installer->getFkName('mc_warehouse/warehouse_product', 'warehouse_id', 'mc_warehouse/warehouse', 'id'),
             'warehouse_id', $installer->getTable('mc_warehouse/warehouse'), 'id',
             Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
