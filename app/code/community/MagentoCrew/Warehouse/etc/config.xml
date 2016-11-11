@@ -28,5 +28,12 @@
                 <class>MagentoCrew_Warehouse_Block</class>
             </mc_warehouse>
         </blocks>
+        <resources>
+            <mc_setup>
+                <setup>
+                    <module>MagentoCrew_Warehouse</module>
+                </setup>
+            </mc_setup>
+        </resources>
     </global>
 </config>
