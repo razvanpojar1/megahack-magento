@@ -2,4 +2,5 @@
 
 app/code/community/MagentoCrew/*                      app/code/community/MagentoCrew/
 app/design/frontend/base/default/layout/magentocrew/* app/design/frontend/base/default/layout/magentocrew/
+app/etc/locale/ro_RO/*                                app/etc/locale/ro_RO/
 app/etc/modules/MagentoCrew_Warehouse.xml             app/etc/modules/MagentoCrew_Warehouse.xml
