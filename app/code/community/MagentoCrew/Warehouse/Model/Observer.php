@@ -50,7 +50,26 @@ class MagentoCrew_Warehouse_Model_Observer
         
         if (count($items)) {
             foreach ($items as $item) {
-                //die(get_Class($item));
+                $warehouse = Mage::getModel('mc_warehouse/warehouse')
+                    ->getCollection()
+                    ->getWarehouseNamesByProductId($item->getProductId());
+                
+                if (!count($warehouse)) {
+                    continue;
+                }
+                
+                $option = array(
+                    'item_id'       => $item->getId(),
+                    'product_id'    => $item->getProductId(),
+                    'code'          => 'additional_options',
+                    'value'         => serialize(
+                            array('warehouse_product' => array(
+                                'label' => 'Warehouse',
+                                'value' => implode(", ", $warehouse))
+                            ))
+                    );
+                
+                $item->addOption($option);
             }
         }
     }
