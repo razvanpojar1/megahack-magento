@@ -33,4 +33,25 @@ class MagentoCrew_Warehouse_Model_Observer
             Mage::helper('configurableswatches/productlist')->convertLayerBlock($blockName);
         }
     }
+    
+    /**
+     * Add warehouse info of the product from quote as additional options
+     * Observes: sales_quote_item_load_after
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function addWarehouseOptionInfo(Varien_Event_Observer $observer)
+    {
+        /**
+         * @var Mage_Sales_Model_Quote $quote
+         */
+        $quote = $observer->getEvent()->getQuote();
+        $items = $quote->getItemsCollection();
+        
+        if (count($items)) {
+            foreach ($items as $item) {
+                //die(get_Class($item));
+            }
+        }
+    }
 }
