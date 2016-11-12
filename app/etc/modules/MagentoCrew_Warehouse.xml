@@ -7,10 +7,17 @@
  */
 -->
 <config>
-  <modules>
-    <MagentoCrew_Warehouse>
-      <active>true</active>
-      <codePool>community</codePool>
-    </MagentoCrew_Warehouse>
-  </modules>
+    <modules>
+        <MagentoCrew_Warehouse>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Core/>
+                <Mage_Catalog/>
+                <Mage_CatalogSearch/>
+                <Mage_ConfigurableSwatches/>
+                <Mage_Adminhtml/>
+            </depends>
+        </MagentoCrew_Warehouse>
+    </modules>
 </config>

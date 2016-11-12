@@ -1,12 +1,12 @@
 <?php
 /**
- * Block warehouse catalog filter
+ * Block warehouse catalog search filter
  * @copyright   Copyright (c) 2016 MagentoCrew
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class MagentoCrew_Warehouse_Block_Catalog_Layer_View 
-    extends Mage_Catalog_Block_Layer_View
+class MagentoCrew_Warehouse_Block_Catalogsearch_Layer_View 
+    extends Mage_CatalogSearch_Block_Layer
 {
     /**
      * Warehouse Block Filter Name
