@@ -72,4 +72,21 @@ class MagentoCrew_Warehouse_Model_Resource_Warehouse_Collection extends Mage_Cor
 
         return $productCountSelect;
     }
+    
+    public function getWarehouseNamesByProductId($productId)
+    {
+        if (!$productId) {
+            return array();
+        }
+        
+        $select = $this->getSelect()
+            ->reset(Zend_Db_Select::COLUMNS)
+            ->columns(array('name'))
+            ->join(array('warehouse_product' => $this->getTable('mc_warehouse/warehouse_product')),
+                'warehouse_product.warehouse_id = main_table.id',
+                array())
+            ->where('warehouse_product.product_id = ?', (int)$productId );
+        
+        return $this->getConnection()->fetchCol($select);
+    }
 }
