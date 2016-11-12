@@ -8,5 +8,5 @@
  */
 ?>
 <div class="product-warehouse">
-    test warehouse
+    <?php echo $this->__('Available in next warehouses: '). implode(", ", $this->getWarehouses());?>
 </div>
