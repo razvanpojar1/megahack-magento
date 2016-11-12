@@ -1,4 +1,5 @@
-# Magento Warehouse Module - chalange e-commerce MegaHeck Cluj-Napoca 11-13 November 2016
+# Magento Warehouse Module 
+ - challenge e-commerce MegaHeck Cluj-Napoca 11-13 November 2016
  - by MagentoCrew (Razvan Pojar, Claudiu Margineanu, Marius Grad)
 
 Problem scope:
