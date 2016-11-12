@@ -8,7 +8,7 @@
 -->
 <config>
     <menu>
-        <catalog translate="title" module="catalog">
+        <catalog>
             <children>
                 <warehouse translate="title" module="mc_warehouse">
                     <title>Manage Warehouse</title>
@@ -22,7 +22,18 @@
         <resources>
             <admin>
                 <children>
-                    <catalog translate="title" module="catalog">
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <mc_warehouse translate="title" module="mc_warehouse">
+                                        <title>Warehouse - MagentoCrew</title>
+                                    </mc_warehouse>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                    <catalog translate="title" module="mc_warehouse">
                         <children>
                             <warehouse translate="title">
                                 <title>Warehouse</title>
