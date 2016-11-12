@@ -13,15 +13,15 @@ $warehouses = $this->getAvailableWarehouses();
 <tr>
     <td>
         <?php if (!count($warehouses)): ?>
-            <span class="error"><strong><?php echo $this->__('Error:'); ?> </strong> <?php echo $this->__('This product is no longer available in any warehouses!'); ?></span>
+            <span class="error"><strong><?php echo $this->__('Error: '); ?></strong><?php echo $this->__('This product is no longer available in any warehouses!'); ?></span>
         <?php endif; ?>
 
     </td>
     <td colspan="2" class="nobr a-left" style="padding: 5px 10px 20px 10px;">
         <?php if (count($warehouses)): ?>
-            <strong class="nobr" style="padding-right: 10px ;"><?php echo $this->__('Ship from:') ?></strong>
+            <strong class="nobr" style="padding-right: 10px ;"><?php echo $this->__('Ship from: ') ?></strong>
 
-            <select class="select required-entry">
+            <select name="shipment[warehouses][598]" class="select required-entry">
                 <?php if (count($warehouses) > 1): ?>
                     <option value=""><?php echo $this->__('-- Please select warehouse --'); ?></option>
                 <?php endif; ?>
