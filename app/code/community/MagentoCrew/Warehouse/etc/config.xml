@@ -71,4 +71,22 @@
             </modules>
         </translate>
     </adminhtml>
+    <frontend>
+        <layout>
+            <updates>
+                <mc_warehouse>
+                    <file>magentocrew/warehouse.xml</file>
+                </mc_warehouse>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <MagentoCrew_Warehouse>
+                    <files>
+                        <default>MagentoCrew_Warehouse.csv</default>
+                    </files>
+                </MagentoCrew_Warehouse>
+            </modules>
+        </translate>
+    </frontend>
 </config>
