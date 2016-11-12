@@ -34,12 +34,11 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tabs extends Mage_Adm
         ));
 
         $this->addTab('warehouse_products', array(
-            'label'     => Mage::helper('mc_warehouse')->__('Manage Products'),
-            'title'     => Mage::helper('mc_warehouse')->__('Manage Products'),
-//            'content'   => $this->getLayout()->createBlock('adminhtml/poll_edit_tab_answers')
-//                ->append($this->getLayout()->createBlock('adminhtml/poll_edit_tab_answers_list'))
-//                ->toHtml(),
+            'label'     => Mage::helper('catalog')->__('Manage Products'),
+            'url'       => $this->getUrl('*/*/related', array('_current' => true)),
+            'class'     => 'ajax',
         ));
+
         return parent::_beforeToHtml();
     }
 }

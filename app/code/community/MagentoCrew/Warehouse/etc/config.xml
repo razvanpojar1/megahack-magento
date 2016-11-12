@@ -104,6 +104,14 @@
                     </configurableswatches_warehouse_layout>
                 </observers>
             </controller_action_layout_generate_blocks_after>
+            <sales_quote_load_after>
+                <observers>
+                    <add_warehouse_option_info>
+                        <class>mc_warehouse/observer</class>
+                        <method>addWarehouseOptionInfo</method>
+                    </add_warehouse_option_info>
+                </observers>
+            </sales_quote_load_after>
         </events>
     </frontend>
     <default>

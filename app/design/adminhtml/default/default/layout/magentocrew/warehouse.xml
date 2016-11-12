@@ -26,6 +26,12 @@
         </block>
     </adminhtml_warehouse_related>
 
+    <adminhtml_warehouse_relatedgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="mc_warehouse/adminhtml_warehouse_edit_tab_products" name="mc.warehouse.edit.tab.products"/>
+        </block>
+    </adminhtml_warehouse_relatedgrid>
+
     <adminhtml_sales_order_shipment_new>
         <reference name="order_item_extra_info">
             <block type="mc_warehouse/adminhtml_sales_order_shipment_create_items_warehouses" name="shipment_items_warehouses"

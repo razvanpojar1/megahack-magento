@@ -27,7 +27,6 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     /**
      * Render index action
      *
-     * @return null
      */
     public function indexAction()
     {
@@ -50,7 +49,6 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     /**
      * Render index action
      *
-     * @return null
      */
     public function editAction()
     {
@@ -80,6 +78,10 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
         }
     }
 
+    /**
+     * Save action
+     *
+     */
     public function saveAction()
     {
         if ($data = $this->getRequest()->getPost()) {
@@ -112,6 +114,10 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
         }
     }
 
+    /**
+     * Delete action
+     *
+     */
     public function deleteAction()
     {
         if ($id = $this->getRequest()->getParam('id')) {
@@ -164,5 +170,36 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     protected function _isAllowed()
     {
         return Mage::getSingleton('admin/session')->isAllowed('warehouse');
+    }
+
+    /**
+     * Get warehouse products grid and serializer block
+     */
+    public function relatedAction()
+    {
+        $this->loadLayout();
+        $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
+            ->setWarehouseId($this->getRequest()->getPost('id', null));
+        Mage::register('warehouse_id',$this->getRequest()->getPost('id', null));
+        $this->renderLayout();
+    }
+    
+    /**
+     * Get related products grid
+     */
+    public function relatedGridAction()
+    {
+        $this->_initWarehouse();
+        $this->loadLayout();
+        $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
+            ->setProductsRelated($this->getRequest()->getPost('products_related', null));
+        $this->renderLayout();
+    }
+
+    public function _initWarehouse()
+    {
+            $warehouseId = $this->getRequest()->getParam('id');
+        $warehouseModel  = Mage::getModel('mc_warehouse/warehouse')->load($warehouseId);
+        Mage::register('warehouse_data', $warehouseModel);
     }
 }
