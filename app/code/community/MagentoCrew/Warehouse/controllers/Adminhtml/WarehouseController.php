@@ -179,7 +179,7 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     {
         $this->loadLayout();
         $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
-            ->setWarehouseProduct($this->getRequest()->getPost('id', null));
+            ->setWarehouseId($this->getRequest()->getPost('id', null));
         $this->renderLayout();
     }
     
