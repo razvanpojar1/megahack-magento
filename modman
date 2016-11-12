@@ -3,6 +3,8 @@
 app/code/community/MagentoCrew/*                        app/code/community/MagentoCrew/
 app/design/frontend/base/default/layout/magentocrew/*   app/design/frontend/base/default/layout/magentocrew/
 app/design/frontend/base/default/template/magentocrew/* app/design/frontend/base/default/template/magentocrew/
+app/design/adminhtml/default/default/layout/magentocrew/warehouse.xml   app/design/adminhtml/default/default/layout/magentocrew/warehouse.xml
+app/design/adminhtml/default/default/template/magentocrew/warehouse*    app/design/adminhtml/default/default/template/magentocrew/
 app/locale/ro_RO/*                                      app/locale/ro_RO/
 app/locale/en_US/*                                      app/locale/en_US/
 app/etc/modules/MagentoCrew_Warehouse.xml               app/etc/modules/MagentoCrew_Warehouse.xml

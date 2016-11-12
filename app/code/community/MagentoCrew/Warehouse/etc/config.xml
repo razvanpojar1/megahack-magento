@@ -70,6 +70,13 @@
                 </MagentoCrew_Warehouse>
             </modules>
         </translate>
+        <layout>
+            <updates>
+                <mc_warehouse>
+                    <file>magentocrew/warehouse.xml</file>
+                </mc_warehouse>
+            </updates>
+        </layout>
     </adminhtml>
     <frontend>
         <layout>
