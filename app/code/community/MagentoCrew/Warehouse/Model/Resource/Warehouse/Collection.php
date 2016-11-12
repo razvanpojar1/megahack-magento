@@ -7,6 +7,11 @@
 class MagentoCrew_Warehouse_Model_Resource_Warehouse_Collection extends Mage_Core_Model_Resource_Db_Collection_Abstract
 {
     /**
+     * @var bool
+     */
+    protected $_isProductsJoined = false;
+
+    /**
      * Collection init
      */
     protected function _construct()
@@ -89,4 +94,35 @@ class MagentoCrew_Warehouse_Model_Resource_Warehouse_Collection extends Mage_Cor
         
         return $this->getConnection()->fetchCol($select);
     }
+
+    /**
+     * Add Product filter with optional minQty
+     *
+     * @param int $productId
+     * @param null $minQty
+     * @return $this
+     */
+    public function addProductFilter($productId, $minQty = null)
+    {
+        $adapter = $this->getConnection();
+        if (!$this->_isProductsJoined) {
+            $this->getSelect()
+                ->join(
+                    array('product' => $this->getTable('mc_warehouse/warehouse_product')),
+                    $adapter->quoteInto('main_table.id = product.warehouse_id and product.product_id = ?', (int) $productId),
+                    array('stock_qty' => 'product.stock_qty'))
+            ;
+            $this->_isProductsJoined = true;
+        }
+
+        $this->getSelect()->where('product.product_id', array('eq' => $productId));
+
+        if ($minQty) {
+            $this->getSelect()->where('product.stock_qty >= ?', (int) $minQty);
+        }
+        return $this;
+    }
+
+
+
 }
