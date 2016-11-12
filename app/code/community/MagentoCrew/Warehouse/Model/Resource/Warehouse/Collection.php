@@ -13,4 +13,63 @@ class MagentoCrew_Warehouse_Model_Resource_Warehouse_Collection extends Mage_Cor
     {
         $this->_init('mc_warehouse/warehouse');
     }
+    
+     /**
+     * Collect warehouses from product collection
+     * 
+     * @param Mage_Catalog_Model_Resource_Product_Collection $productCollection
+     * @return MagentoCrew_Warehouse_Model_Resource_Warehouse
+     */
+    public function getWarehousesFromProductCollection(Mage_Catalog_Model_Resource_Product_Collection $productCollection)
+    {
+        $select = $this->_getProductCountSelect($productCollection);
+        
+        $productCounts = $this->getConnection()->fetchPairs($select);
+        
+        $warehouseIds = array_keys($productCounts);
+        
+        if (count($warehouseIds)) {
+            $this->addFieldToFilter('main_table.id', array('in' => $warehouseIds));
+        } else {
+            // force empty collection if products from collection do not have assigned warehouses
+            $this->_setIsLoaded();
+        }
+        $this->load();
+        
+        foreach ($this->getItems() as $warehouse) {
+            $_count = 0;
+            if (isset($productCounts[$warehouse->getId()])) {
+                $_count = $productCounts[$warehouse->getId()];
+            }
+            $warehouse->setProductCount($_count);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Retreive product count select for warehouses
+     * 
+     * @param Mage_Catalog_Model_Resource_Product_Collection $productCollection
+     * @return Varien_Db_Select
+     */
+    protected function _getProductCountSelect(Mage_Catalog_Model_Resource_Product_Collection $productCollection)
+    {
+        $productCountSelect = clone $productCollection->getSelect();
+        $productCountSelect->reset(Zend_Db_Select::COLUMNS)
+            ->reset(Zend_Db_Select::GROUP)
+            ->reset(Zend_Db_Select::ORDER)
+            ->distinct(false)
+            ->join(array('count_table' => $this->getTable('mc_warehouse/warehouse_product')),
+                'count_table.product_id = e.entity_id',
+                array(
+                    'count_table.warehouse_id',
+                    'product_count' => new Zend_Db_Expr('COUNT(DISTINCT count_table.product_id)')
+                )
+            )
+            ->group('count_table.warehouse_id');
+        $productCountSelect->limit(); //reset limits
+
+        return $productCountSelect;
+    }
 }
