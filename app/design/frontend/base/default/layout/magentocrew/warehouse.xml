@@ -9,7 +9,10 @@
 <layout version="0.1.0">
     <catalog_category_layered translate="label">
         <reference name="left">
-            <block type="mc_warehouse/catalog_layer_view" name="catalog.leftnav" after="currency" template="catalog/layer/view.phtml"/>
+            <remove name="catalog.leftnav"/>
+            <block type="mc_warehouse/catalog_layer_view" name="catalog.leftnav.extend" as="catalog.leftnav" after="currency" template="catalog/layer/view.phtml">
+                <block type="core/text_list" name="catalog.leftnav.state.renderers" as="state_renderers" />
+            </block>
         </reference>
     </catalog_category_layered>
 </layout>

@@ -36,7 +36,8 @@ class MagentoCrew_Warehouse_Block_Catalog_Layer_View
     protected function _prepareLayout()
     {
         $warehouseBlock = $this->getLayout()->createBlock($this->_warehouseBlockName)
-            ->setLayer($this->getLayer());
+            ->setLayer($this->getLayer())
+            ->init();
         
         $this->setChild('warehouse_filter', $warehouseBlock);
         
@@ -60,7 +61,7 @@ class MagentoCrew_Warehouse_Block_Catalog_Layer_View
         
         $warehouseFilter = $this->getChild('warehouse_filter');
         
-        if ($categoryFilter) {
+        if ($warehouseFilter) {
             $filters[] = $warehouseFilter;
         }
 
