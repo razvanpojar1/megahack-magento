@@ -1,4 +1,5 @@
 # MagentoCrew hackathon - Warehouse module
 
-app/code/community/MagentoCrew/*                     app/code/community/MagentoCrew/
-app/etc/modules/MagentoCrew_Warehouse.xml            app/etc/modules/MagentoCrew_Warehouse.xml
+app/code/community/MagentoCrew/*                      app/code/community/MagentoCrew/
+app/design/frontend/base/default/layout/magentocrew/* app/design/frontend/base/default/layout/magentocrew/
+app/etc/modules/MagentoCrew_Warehouse.xml             app/etc/modules/MagentoCrew_Warehouse.xml
