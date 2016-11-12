@@ -1,5 +1,5 @@
-Magento Warehouse Module - chalange e-commerce MegaHeck Cluj-Napoca 11-13 November 2016
- - by MagentoCrew (Razvan Pojar, Claudiu Margineanu, Marius Grad)
+# Magento Warehouse Module - chalange e-commerce MegaHeck Cluj-Napoca 11-13 November 2016
+#  - by MagentoCrew (Razvan Pojar, Claudiu Margineanu, Marius Grad)
 
 Problem scope:
 Background: datorită sistemului de licitații publice, ANAF nu poate decide fără licitații un curier anume care să facă expedițiile, deci pentru început produsele se vor rezerva și ridica din depozit.
