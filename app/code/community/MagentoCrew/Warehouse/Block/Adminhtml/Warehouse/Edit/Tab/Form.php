@@ -17,28 +17,28 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Form extends Mage
         }
 
         $fieldset->addField('name', 'text', array(
-            'label' => Mage::helper('mc_warehouse')->__('Warehouse name'),
+            'label' => Mage::helper('mc_warehouse')->__('Name'),
             'name'  => 'name',
             'required' => true,
             'value' => $warehouseData->getName()
         ));
 
         $fieldset->addField('code', 'text', array(
-            'label' => Mage::helper('mc_warehouse')->__('Warehouse code'),
+            'label' => Mage::helper('mc_warehouse')->__('Code'),
             'name'  => 'code',
             'required' => true,
             'value' => $warehouseData->getCode()
         ));
 
         $fieldset->addField('email', 'text', array(
-            'label' => Mage::helper('mc_warehouse')->__('Warehouse email'),
+            'label' => Mage::helper('mc_warehouse')->__('Email'),
             'name'  => 'email',
             'required' => true,
             'value' => $warehouseData->getEmail()
         ));
 
         $fieldset->addField('location', 'text', array(
-            'label' => Mage::helper('mc_warehouse')->__('Warehouse location'),
+            'label' => Mage::helper('mc_warehouse')->__('Location'),
             'name'  => 'location',
             'required' => true,
             'value' => $warehouseData->getLocation()
