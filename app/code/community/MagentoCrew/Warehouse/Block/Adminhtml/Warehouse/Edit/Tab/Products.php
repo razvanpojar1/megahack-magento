@@ -20,16 +20,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
         }
 
     }
-    
-    /**
-     * Retirve currently edited product model
-     *
-     * @return Mage_Catalog_Model_Product
-     */
-    protected function _getProduct()
-    {
-        return Mage::getModel('catalog/product')->load(400);
-    }
+
     /**
      * Add columns to grid
      *
@@ -37,16 +28,14 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
      */
     protected function _prepareColumns()
     {
-        if (!$this->isReadonly()) {
-            $this->addColumn('in_products', array(
-                'header_css_class'  => 'a-center',
-                'type'              => 'checkbox',
-                'name'              => 'in_products',
-                'values'            => $this->_getSelectedProducts(),
-                'align'             => 'center',
-                'index'             => 'entity_id'
-            ));
-        }
+        $this->addColumn('in_products', array(
+            'header_css_class'  => 'a-center',
+            'type'              => 'checkbox',
+            'name'              => 'in_products',
+            'values'            => $this->_getSelectedProducts(),
+            'align'             => 'center',
+            'index'             => 'entity_id'
+        ));
 
         $this->addColumn('entity_id', array(
             'header'    => Mage::helper('catalog')->__('ID'),
@@ -68,33 +57,12 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
             'options'   => Mage::getSingleton('catalog/product_type')->getOptionArray(),
         ));
 
-        $sets = Mage::getResourceModel('eav/entity_attribute_set_collection')
-            ->setEntityTypeFilter(Mage::getModel('catalog/product')->getResource()->getTypeId())
-            ->load()
-            ->toOptionHash();
-
-        $this->addColumn('set_name', array(
-            'header'    => Mage::helper('catalog')->__('Attrib. Set Name'),
-            'width'     => 130,
-            'index'     => 'attribute_set_id',
-            'type'      => 'options',
-            'options'   => $sets,
-        ));
-
         $this->addColumn('status', array(
             'header'    => Mage::helper('catalog')->__('Status'),
             'width'     => 90,
             'index'     => 'status',
             'type'      => 'options',
             'options'   => Mage::getSingleton('catalog/product_status')->getOptionArray(),
-        ));
-
-        $this->addColumn('visibility', array(
-            'header'    => Mage::helper('catalog')->__('Visibility'),
-            'width'     => 90,
-            'index'     => 'visibility',
-            'type'      => 'options',
-            'options'   => Mage::getSingleton('catalog/product_visibility')->getOptionArray(),
         ));
 
         $this->addColumn('sku', array(
@@ -110,15 +78,16 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
             'index'         => 'price'
         ));
 
-        $this->addColumn('position', array(
-            'header'                    => Mage::helper('catalog')->__('Position'),
-            'name'                      => 'position',
-            'type'                      => 'number',
+        $this->addColumn('stock_qty', array(
+            'header'                    => Mage::helper('catalog')->__('Stock Qty'),
+            'name'                      => 'stock_qty',
+            'type'                      => 'input',
             'validate_class'            => 'validate-number',
-            'index'                     => 'position',
+            'index'                     => 'stock_qty',
             'width'                     => 60,
             'filter_condition_callback' => array($this, '_addLinkModelFilterCallback')
         ));
+
 
         return parent::_prepareColumns();
     }
@@ -142,45 +111,24 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
      */
     protected function _prepareCollection()
     {
-        $collection = Mage::getModel('catalog/product_link')->useRelatedLinks()
-            ->getProductCollection()
-            ->setProduct($this->_getProduct())
+        $collection = Mage::getModel('catalog/product')->getCollection()
             ->addAttributeToSelect('*');
 
-        if ($this->isReadonly()) {
-            $productIds = $this->_getSelectedProducts();
-            if (empty($productIds)) {
-                $productIds = array(0);
-            }
-            $collection->addFieldToFilter('entity_id', array('in' => $productIds));
-        }
+        $collection->getSelect()
+            ->joinLeft(
+                array('warehouse_product' => $collection->getResource()->getTable('mc_warehouse/warehouse_product')),
+                'warehouse_product.product_id = e.entity_id',
+                array('warehouse_product.stock_qty')
+            )
+            ->where('warehouse_product.warehouse_id = ?', (int)$this->getRequest()->getParam('id'));
 
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
 
-    /**
-     * Retrieve related products
-     *
-     * @return array
-     */
-    public function getSelectedRelatedProducts()
+    protected function _getWarehouse()
     {
-        $products = array();
-        foreach ($this->_getProduct()->getRelatedProducts() as $product) {
-            $products[$product->getId()] = array('position' => $product->getPosition());
-        }
-        return $products;
-    }
-    
-    /**
-     * Checks when this block is readonly
-     *
-     * @return boolean
-     */
-    public function isReadonly()
-    {
-        return $this->_getProduct()->getRelatedReadonly();
+        return Mage::registry('warehouse_data');
     }
     
     /**
@@ -191,9 +139,35 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
     protected function _getSelectedProducts()
     {
         $products = $this->getProductsRelated();
+
         if (!is_array($products)) {
-            $products = array_keys($this->getSelectedRelatedProducts());
+            $products = $this->getWarehouseProductCollectionById();
         }
         return $products;
     }
+
+    /**
+     * Get product collection by warehouse id
+     *
+     * @param int $warehouseId
+     * @return MagentoCrew_Warehouse_Model_Resource_Warehouse_Product_Collection
+     */
+    private function getWarehouseProductCollectionById()
+    {
+        $getWarehouseProducts = Mage::getModel('mc_warehouse/warehouse_product')->getCollection();
+        $getWarehouseProducts->addFieldToFilter('warehouse_id', array('eq' => $this->getRequest()->getParam('id')));
+        $getWarehouseProducts->load();
+
+        if (!$getWarehouseProducts->count()) {
+            return array();
+        }
+
+        $products = array();
+        foreach ($getWarehouseProducts as $item) {
+            $products[] = $item->getProductId();
+        }
+
+        return $products;
+    }
+
 }

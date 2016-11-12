@@ -180,6 +180,7 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
         $this->loadLayout();
         $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
             ->setWarehouseId($this->getRequest()->getPost('id', null));
+        Mage::register('warehouse_id',$this->getRequest()->getPost('id', null));
         $this->renderLayout();
     }
     
@@ -188,10 +189,17 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
      */
     public function relatedGridAction()
     {
-        $this->_initProduct();
+        $this->_initWarehouse();
         $this->loadLayout();
         $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
             ->setProductsRelated($this->getRequest()->getPost('products_related', null));
         $this->renderLayout();
+    }
+
+    public function _initWarehouse()
+    {
+            $warehouseId = $this->getRequest()->getParam('id');
+        $warehouseModel  = Mage::getModel('mc_warehouse/warehouse')->load($warehouseId);
+        Mage::register('warehouse_data', $warehouseModel);
     }
 }
