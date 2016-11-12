@@ -1,6 +1,6 @@
 <?php
 
-class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends Mage_Adminhtml_Block_Widget_Form
+class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends Mage_Adminhtml_Block_Widget_Grid
 {
 
     /**
@@ -19,6 +19,16 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
             $this->setDefaultFilter(array('in_products' => 1));
         }
 
+    }
+    
+    /**
+     * Retirve currently edited product model
+     *
+     * @return Mage_Catalog_Model_Product
+     */
+    protected function _getProduct()
+    {
+        return Mage::getModel('catalog/product')->load(400);
     }
     /**
      * Add columns to grid
@@ -124,7 +134,30 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
             ? $this->getData('grid_url')
             : $this->getUrl('*/*/relatedGrid', array('_current' => true));
     }
+    
+    /**
+     * Prepare collection
+     *
+     * @return Mage_Adminhtml_Block_Widget_Grid
+     */
+    protected function _prepareCollection()
+    {
+        $collection = Mage::getModel('catalog/product_link')->useRelatedLinks()
+            ->getProductCollection()
+            ->setProduct($this->_getProduct())
+            ->addAttributeToSelect('*');
 
+        if ($this->isReadonly()) {
+            $productIds = $this->_getSelectedProducts();
+            if (empty($productIds)) {
+                $productIds = array(0);
+            }
+            $collection->addFieldToFilter('entity_id', array('in' => $productIds));
+        }
+
+        $this->setCollection($collection);
+        return parent::_prepareCollection();
+    }
 
     /**
      * Retrieve related products
@@ -134,8 +167,32 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
     public function getSelectedRelatedProducts()
     {
         $products = array();
-        foreach (Mage::registry('current_product')->getRelatedProducts() as $product) {
+        foreach ($this->_getProduct()->getRelatedProducts() as $product) {
             $products[$product->getId()] = array('position' => $product->getPosition());
+        }
+        return $products;
+    }
+    
+    /**
+     * Checks when this block is readonly
+     *
+     * @return boolean
+     */
+    public function isReadonly()
+    {
+        return $this->_getProduct()->getRelatedReadonly();
+    }
+    
+    /**
+     * Retrieve selected related products
+     *
+     * @return array
+     */
+    protected function _getSelectedProducts()
+    {
+        $products = $this->getProductsRelated();
+        if (!is_array($products)) {
+            $products = array_keys($this->getSelectedRelatedProducts());
         }
         return $products;
     }

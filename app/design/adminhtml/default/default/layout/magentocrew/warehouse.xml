@@ -25,4 +25,10 @@
             </block>
         </block>
     </adminhtml_warehouse_related>
+    
+    <adminhtml_warehouse_relatedgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="mc_warehouse/adminhtml_warehouse_edit_tab_products" name="mc.warehouse.edit.tab.products"/>
+        </block>
+    </adminhtml_warehouse_relatedgrid>
 </layout>

@@ -182,4 +182,16 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
             ->setWarehouseProduct($this->getRequest()->getPost('id', null));
         $this->renderLayout();
     }
+    
+    /**
+     * Get related products grid
+     */
+    public function relatedGridAction()
+    {
+        $this->_initProduct();
+        $this->loadLayout();
+        $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
+            ->setProductsRelated($this->getRequest()->getPost('products_related', null));
+        $this->renderLayout();
+    }
 }
