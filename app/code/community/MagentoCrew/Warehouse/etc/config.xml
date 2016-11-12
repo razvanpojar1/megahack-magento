@@ -88,6 +88,16 @@
                 </MagentoCrew_Warehouse>
             </modules>
         </translate>
+        <events>
+            <controller_action_layout_generate_blocks_after>
+                <observers>
+                    <configurableswatches_warehouse_layout>
+                        <class>mc_warehouse/observer</class>
+                        <method>convertLayerBlock</method>
+                    </configurableswatches_warehouse_layout>
+                </observers>
+            </controller_action_layout_generate_blocks_after>
+        </events>
     </frontend>
     <default>
         <mc_warehouse>
