@@ -16,7 +16,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Grid extends Mage_Adminhtm
         $this->setDefaultSort('id');
         $this->setSaveParametersInSession(true);
         $this->setDefaultDir('ASC');
-        $this->setUseAjax(true);
+        $this->setUseAjax(false);
     }
 
     /**
