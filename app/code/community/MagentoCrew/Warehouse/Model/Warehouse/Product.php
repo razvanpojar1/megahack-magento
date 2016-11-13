@@ -19,7 +19,7 @@ class MagentoCrew_Warehouse_Model_Warehouse_Product extends Mage_Core_Model_Abst
      *
      * @param int $productId
      * @param int $warehouseId
-     * @return int
+     * @return this
      */
     public function loadFromInfo($productId, $warehouseId)
     {
