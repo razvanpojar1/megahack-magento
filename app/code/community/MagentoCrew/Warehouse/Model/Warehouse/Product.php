@@ -26,4 +26,17 @@ class MagentoCrew_Warehouse_Model_Warehouse_Product extends Mage_Core_Model_Abst
         $id = $this->getResource()->getIdFromInfo($productId, $warehouseId);
         return $this->load($id);
     }
+
+    /**
+     * Decrease stock qty
+     *
+     * @param $qty
+     * @return $this
+     */
+    public function decreaseStockQty($qty)
+    {
+        $this->setStockQty($this->getStockQty() - $qty);
+
+        return $this;
+    }
 }
