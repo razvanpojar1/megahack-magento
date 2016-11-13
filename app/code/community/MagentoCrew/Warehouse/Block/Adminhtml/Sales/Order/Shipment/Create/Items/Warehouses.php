@@ -27,7 +27,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Sales_Order_Shipment_Create_Items_Wa
     {
         /** @var MagentoCrew_Warehouse_Model_Resource_Warehouse_Collection $warehouses */
         $warehouses = Mage::getResourceModel('mc_warehouse/warehouse_collection');
-        $warehouses->addProductFilter($this->getItem()->getProductId());
+        $warehouses->addProductFilter($this->getItem()->getProductId(), 1);
 
         return $warehouses;
     }
