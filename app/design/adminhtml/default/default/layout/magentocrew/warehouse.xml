@@ -14,12 +14,12 @@
                 <reference name="related_grid_serializer">
                     <action method="initSerializerBlock">
                         <grid_block_name>mc.warehouse.edit.tab.products</grid_block_name>
-                        <data_callback>getSelectedRelatedProducts</data_callback>
+                        <data_callback>getWarehouseProductsCollectionById</data_callback>
                         <hidden_input_name>links[related]</hidden_input_name>
                         <reload_param_name>products_related</reload_param_name>
                     </action>
                     <action method="addColumnInputName">
-                        <input_name>position</input_name>
+                        <input_name>stock_qty</input_name>
                     </action>
                 </reference>
             </block>

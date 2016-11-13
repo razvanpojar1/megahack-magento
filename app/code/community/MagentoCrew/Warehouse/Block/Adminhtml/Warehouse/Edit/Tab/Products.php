@@ -5,7 +5,8 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends Mage_Adminhtml_Block_Widget_Grid
+class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products 
+    extends Mage_Adminhtml_Block_Widget_Grid
 {
     /**
      * Set grid params
@@ -15,11 +16,10 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
     {
         parent::__construct();
         $this->setId('warehouse_products_grid');
-        $this->setDefaultSort('id');
+        $this->setDefaultSort('entity_id');
         $this->setUseAjax(true);
-        $warehouseProductModel = Mage::getModel('mc_warehouse/warehouse_product');
 
-        if ($warehouseProductModel->getId()) {
+        if ($this->getWarehouseId()) {
             $this->setDefaultFilter(array('in_products' => 1));
         }
     }
@@ -84,7 +84,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
         $this->addColumn('stock_qty', array(
             'header'                    => Mage::helper('catalog')->__('Stock Qty'),
             'name'                      => 'stock_qty',
-            'type'                      => 'input',
+            'type'                      => 'number',
             'validate_class'            => 'validate-number',
             'index'                     => 'stock_qty',
             'width'                     => 60,
@@ -117,14 +117,6 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
         $collection = Mage::getModel('catalog/product')->getCollection()
             ->addAttributeToSelect('*');
 
-        $collection->getSelect()
-            ->joinLeft(
-                array('warehouse_product' => $collection->getResource()->getTable('mc_warehouse/warehouse_product')),
-                'warehouse_product.product_id = e.entity_id',
-                array('warehouse_product.stock_qty')
-            )
-            ->where('warehouse_product.warehouse_id = ?', (int)$this->getWarehouseId());
-
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
@@ -139,7 +131,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
         $products = $this->getProductsRelated();
 
         if (!is_array($products)) {
-            $products = $this->getWarehouseProductCollectionById();
+            $products = array_keys($this->getWarehouseProducts());
         }
         return $products;
     }
@@ -150,27 +142,58 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
      * @param int $warehouseId
      * @return MagentoCrew_Warehouse_Model_Resource_Warehouse_Product_Collection
      */
-    private function getWarehouseProductCollectionById()
+    private function getWarehouseProducts()
     {
-        $getWarehouseProducts = Mage::getModel('mc_warehouse/warehouse_product')->getCollection();
-        $getWarehouseProducts->addFieldToFilter('warehouse_id', array('eq' => (int)$this->getWarehouseId()));
-        $getWarehouseProducts->load();
+        $warehouseProducts = Mage::getModel('mc_warehouse/warehouse_product')->getCollection();
+        $warehouseProducts->addFieldToFilter('warehouse_id', array('eq' => (int)$this->getWarehouseId()));
+        $warehouseProducts->load();
 
-        if (!$getWarehouseProducts->count()) {
+        if (!$warehouseProducts->count()) {
             return array();
         }
 
         $products = array();
-        foreach ($getWarehouseProducts as $item) {
-            $products[] = $item->getProductId();
+        foreach ($warehouseProducts as $item) {
+            $products[$item->getProductId()] = array('stock_qty' => $item->getStockQty());
         }
 
         return $products;
     }
     
+    /**
+     * Warehouse internal id
+     * @return int
+     */
     public function  getWarehouseId()
     {
         return (int)$this->getRequest()->getParam('id');
+    }
+    
+    /**
+     * Add filter
+     *
+     * @param object $column
+     * @return MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products
+     */
+    protected function _addColumnFilterToCollection($column)
+    {
+        // Set custom filter for in product flag
+        if ($column->getId() == 'in_products') {
+            $productIds = $this->_getSelectedProducts();
+            if (empty($productIds)) {
+                $productIds = 0;
+            }
+            if ($column->getFilter()->getValue()) {
+                $this->getCollection()->addFieldToFilter('entity_id', array('in' => $productIds));
+            } else {
+                if($productIds) {
+                    $this->getCollection()->addFieldToFilter('entity_id', array('nin' => $productIds));
+                }
+            }
+        } else {
+            parent::_addColumnFilterToCollection($column);
+        }
+        return $this;
     }
 
 }
