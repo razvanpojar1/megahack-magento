@@ -13,12 +13,12 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
     /**
      * @var null|MagentoCrew_Warehouse_Helper_Data
      */
-    private $_helper = null;
+    protected $_helper = null;
 
     /**
      * @var MagentoCrew_Warehouse_Model_Warehouse[]
      */
-    private $_warehouses = array();
+    protected $_warehouses = array();
 
     /**
      * Additional initialization
@@ -36,7 +36,7 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
      * @param int $warehouseId
      * @return MagentoCrew_Warehouse_Model_Warehouse
      */
-    private function _getWarehouse($warehouseId)
+    protected function _getWarehouse($warehouseId)
     {
         if (empty($this->_warehouses[$warehouseId])) {
             $this->_warehouses[$warehouseId] = Mage::getModel('mc_warehouse/warehouse')->load($warehouseId);
@@ -87,6 +87,8 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
 
 
             $needRedirectEditPage = true;
+            $this->_initWarehouseItems($shipment);
+
             $this->_validateSingleWarehouse();
             $this->_validateWarehouseStock($shipment);
             $needRedirectEditPage = false;
@@ -115,6 +117,8 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
             }
 
             $this->_saveShipment($shipment);
+            //decreases stock from the warehouse_product table for the selected products
+            $this->_saveWarehouseItemsStock($shipment);
 
             $shipment->sendEmail(!empty($data['send_email']), $comment);
 
@@ -154,13 +158,42 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
     }
 
     /**
+     * Init warehouse items associated to shipment items
+     *
+     * - throws some errors related to input parameters
+     *
+     * @param Mage_Sales_Model_Order_Shipment $shipment
+     * @throws Mage_Core_Exception|Exception
+     */
+    protected function _initWarehouseItems($shipment)
+    {
+        $warehouses = $this->_getWarehouseIds();
+
+        foreach ($shipment->getAllItems() as $item) {
+            /** @var Mage_Sales_Model_Order_Shipment_Item $item */
+
+            if (!isset($warehouses[$item->getOrderItemId()])) {
+                throw new Exception('Invalid warehouse parameter for order item SKP: ' . $item->getSku());
+            }
+            $warehouseId = $warehouses[$item->getOrderItemId()];
+
+            /** @var MagentoCrew_Warehouse_Model_Warehouse_Product $warehouseItem */
+            $warehouseItem = Mage::getModel('mc_warehouse/warehouse_product');
+            $warehouseItem = $warehouseItem->loadFromInfo($item->getProductId(), $warehouseId);
+
+            $item->setWarehouseItem($warehouseItem);
+            $shipment->setWarehouseId($warehouseId);
+        }
+    }
+
+    /**
      * Validate single warehouse
      *
      * - All products from a shipping should be shipped from one warehouse
      *
      * @throws Mage_Core_Exception|Exception
      */
-    private function _validateSingleWarehouse()
+    protected function _validateSingleWarehouse()
     {
         $firstWarehouseId = null;
         $warehouses = $this->_getWarehouseIds();
@@ -183,37 +216,56 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
      * @param Mage_Sales_Model_Order_Shipment $shipment
      * @throws Mage_Core_Exception|Exception
      */
-    private function _validateWarehouseStock($shipment)
+    protected function _validateWarehouseStock($shipment)
     {
-        $warehouses = $this->_getWarehouseIds();
-
         foreach ($shipment->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Order_Shipment_Item $item */
 
-            if (!isset($warehouses[$item->getOrderItemId()])) {
-                throw new Exception('Invalid warehouse parameter for order item SKP: ' . $item->getSku());
-            }
-            $warehouseId = $warehouses[$item->getOrderItemId()];
-
             /** @var MagentoCrew_Warehouse_Model_Warehouse_Product $warehouseItem */
-            $warehouseItem = Mage::getModel('mc_warehouse/warehouse_product');
-            $warehouseItem = $warehouseItem->loadFromInfo($item->getProductId(), $warehouseId);
+            $warehouseItem = $item->getWarehouseItem();
+            $warehouse = $this->_getWarehouse($warehouseItem->getWarehouseId());
 
-            $warehouse = $this->_getWarehouse($warehouseId);
-
-            if (!$warehouseItem->getId()) {
+            if (!$warehouseItem->getId() || $warehouseItem->getStockQty() <= 0) {
                 //Warehouse item was not found
                 $message = $this->_helper->__('The product "%s" is no longer available in the warehouse "%s"!', $item->getName(), $warehouse->getName());
                 Mage::throwException($message);
             }
 
             if (!$warehouseItem->getStockQty() || $warehouseItem->getStockQty() < $item->getQty()) {
-                //Warehouse item was not found
+                //Warehouse item has insufficient stock
                 $message = $this->_helper->__('The product "%s" stock quantity from the warehouse "%s" is insufficient! Stock qty is %d.',
                     $item->getName(), $warehouse->getName(), $warehouseItem->getStockQty());
                 Mage::throwException($message);
             }
 
         }
+    }
+
+    /**
+     * Save warehouse items stock
+     *
+     * - Decreases stock from the warehouse_product table for the selected products
+     *
+     * @param Mage_Sales_Model_Order_Shipment $shipment
+     * @throws Mage_Core_Exception|Exception
+     * @return $this
+     */
+    protected function _saveWarehouseItemsStock($shipment)
+    {
+        $transactionSave = Mage::getModel('core/resource_transaction');
+
+        foreach ($shipment->getAllItems() as $item) {
+            /** @var Mage_Sales_Model_Order_Shipment_Item $item */
+
+            /** @var MagentoCrew_Warehouse_Model_Warehouse_Product $warehouseItem */
+            $warehouseItem = $item->getWarehouseItem();
+
+            $warehouseItem->decreaseStockQty($item->getQty());
+            $transactionSave->addObject($warehouseItem);
+        }
+
+        $transactionSave->save();
+
+        return $this;
     }
 }
