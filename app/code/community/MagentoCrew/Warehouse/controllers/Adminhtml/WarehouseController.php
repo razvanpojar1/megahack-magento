@@ -4,6 +4,7 @@
  * @copyright   Copyright (c) 2016 MagentoCrew
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
+
 class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml_Controller_Action
 {
     /**
@@ -178,9 +179,7 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     public function relatedAction()
     {
         $this->loadLayout();
-        $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
-            ->setWarehouseId($this->getRequest()->getPost('id', null));
-        Mage::register('warehouse_id',$this->getRequest()->getPost('id', null));
+        $this->getLayout()->getBlock('mc.warehouse.edit.tab.products');
         $this->renderLayout();
     }
     
@@ -189,17 +188,9 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
      */
     public function relatedGridAction()
     {
-        $this->_initWarehouse();
         $this->loadLayout();
         $this->getLayout()->getBlock('mc.warehouse.edit.tab.products')
             ->setProductsRelated($this->getRequest()->getPost('products_related', null));
         $this->renderLayout();
-    }
-
-    public function _initWarehouse()
-    {
-            $warehouseId = $this->getRequest()->getParam('id');
-        $warehouseModel  = Mage::getModel('mc_warehouse/warehouse')->load($warehouseId);
-        Mage::register('warehouse_data', $warehouseModel);
     }
 }

@@ -1,8 +1,12 @@
 <?php
+/**
+ * Block 
+ * @copyright   Copyright (c) 2016 MagentoCrew
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 
 class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends Mage_Adminhtml_Block_Widget_Grid
 {
-
     /**
      * Set grid params
      *
@@ -18,7 +22,6 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
         if ($warehouseProductModel->getId()) {
             $this->setDefaultFilter(array('in_products' => 1));
         }
-
     }
 
     /**
@@ -120,15 +123,10 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
                 'warehouse_product.product_id = e.entity_id',
                 array('warehouse_product.stock_qty')
             )
-            ->where('warehouse_product.warehouse_id = ?', (int)$this->getRequest()->getParam('id'));
+            ->where('warehouse_product.warehouse_id = ?', (int)$this->getWarehouseId());
 
         $this->setCollection($collection);
         return parent::_prepareCollection();
-    }
-
-    protected function _getWarehouse()
-    {
-        return Mage::registry('warehouse_data');
     }
     
     /**
@@ -155,7 +153,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
     private function getWarehouseProductCollectionById()
     {
         $getWarehouseProducts = Mage::getModel('mc_warehouse/warehouse_product')->getCollection();
-        $getWarehouseProducts->addFieldToFilter('warehouse_id', array('eq' => $this->getRequest()->getParam('id')));
+        $getWarehouseProducts->addFieldToFilter('warehouse_id', array('eq' => (int)$this->getWarehouseId()));
         $getWarehouseProducts->load();
 
         if (!$getWarehouseProducts->count()) {
@@ -168,6 +166,11 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products extends 
         }
 
         return $products;
+    }
+    
+    public function  getWarehouseId()
+    {
+        return (int)$this->getRequest()->getParam('id');
     }
 
 }
