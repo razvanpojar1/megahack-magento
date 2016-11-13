@@ -1,9 +1,9 @@
 # Magento Warehouse Module 
  - challenge e-commerce MegaHeck Cluj-Napoca 11-13 November 2016
  - by MagentoCrew:
-[Răzvan Pojar](https://github.com/razvanpojar1)
-[Marius Grad](https://github.com/mariuscris)
-[Claudiu Mărginean](https://github.com/claudiu-marginean)
+* [Răzvan Pojar](https://github.com/razvanpojar1)
+* [Marius Grad](https://github.com/mariuscris)
+* [Claudiu Mărginean](https://github.com/claudiu-marginean)
 
 
 Problem scope(Romanian Description):
