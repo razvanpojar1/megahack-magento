@@ -41,7 +41,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Form extends Mage
             'value' => $warehouseData->getEmail()
         ));
 
-        $fieldset->addField('location', 'text', array(
+        $fieldset->addField('location', 'textarea', array(
             'label' => Mage::helper('mc_warehouse')->__('Location'),
             'name'  => 'location',
             'required' => true,

@@ -114,11 +114,4 @@
             </sales_quote_load_after>
         </events>
     </frontend>
-    <default>
-        <mc_warehouse>
-            <general>
-                <enable>0</enable>
-            </general>
-        </mc_warehouse>
-    </default>
 </config>
