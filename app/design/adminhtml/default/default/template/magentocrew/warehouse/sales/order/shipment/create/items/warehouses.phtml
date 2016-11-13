@@ -11,7 +11,7 @@
 $_item = $this->getItem();
 $warehouses = $this->getAvailableWarehouses();
 ?>
-<tr>
+<tr class="border">
     <td>
         <?php if (!count($warehouses)): ?>
             <span class="error"><strong><?php echo $this->__('Error: '); ?></strong><?php echo $this->__('This product is no longer available in any warehouses!'); ?></span>
