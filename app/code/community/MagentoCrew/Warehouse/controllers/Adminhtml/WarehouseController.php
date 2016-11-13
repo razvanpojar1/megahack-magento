@@ -91,49 +91,20 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
 
             $warehouseId = $this->getRequest()->getParam('id');
             $warehouseModel = Mage::getModel('mc_warehouse/warehouse');
-
-            $links = $this->getRequest()->getPost('links');
-
-            if (isset($links['related'])) {
-                $decodedSerialize = Mage::helper('adminhtml/js')->decodeGridSerializedInput($links['related']);
-
-                foreach ($decodedSerialize as $productId => $v) {
-                    $newQty = $v['stock_qty'];
-
-                    $productSelected = Mage::getModel('catalog/product')->load($productId);
-                    /** @var Mage_CatalogInventory_Model_Stock_Item $stock */
-                    $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($productSelected);
-                    $warehouseProduct = Mage::getModel('mc_warehouse/warehouse_product');
-                    $warehouseProduct->loadFromInfo($productId, $warehouseId);
-
-                    $qtyDiff = $newQty - $warehouseProduct->getStockQty();
-                    $stock->setQty($stock->getQty() + $qtyDiff);
-
-                    if ($stock->getQty() > 0) {
-                        $stock->setIsInStock(1);
-                    } else {
-                        $stock->setIsInStock(0);
-                    }
-
-                    $stock->save();
-
-                    $warehouseProduct->setProductId($productId);
-                    $warehouseProduct->setWarehouseId($warehouseId);
-                    
-                    $warehouseProduct->setStockQty($newQty);
-                    $warehouseProduct->save();
-                }
-            }
-
+            
             if ($warehouseId) {
                 $warehouseModel->setData($data)
                     ->setId($warehouseId);
             } else {
                 $warehouseModel->setData($data);
             }
-
+            
             try {
                 $warehouseModel->save();
+                
+                if ($this->getRequest()->getPost('links')) {
+                    $this->_setProductsToWarehouses($warehouseModel->getId());
+                }
 
                 if ($this->getRequest()->getParam('back')) {
                     $this->_redirect('*/*/edit', array('id' => $warehouseModel->getId()));
@@ -148,6 +119,43 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
                 Mage::getSingleton('adminhtml/session')->setExampleFormData($data);
                 $this->_redirect('*/*/edit', array('id' => $warehouseModel->getId(), '_current'=>true));
             }
+        }
+    }
+    
+    /**
+     * Set products to warehouse
+     * @param type $warehouseId
+     */
+    protected function _setProductsToWarehouses($warehouseId)
+    {
+        $links = $this->getRequest()->getPost('links');
+        $decodedSerialize = Mage::helper('adminhtml/js')->decodeGridSerializedInput($links['related']);
+
+        foreach ($decodedSerialize as $productId => $v) {
+            $newQty = $v['stock_qty'];
+
+            $productSelected = Mage::getModel('catalog/product')->load($productId);
+            /** @var Mage_CatalogInventory_Model_Stock_Item $stock */
+            $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($productSelected);
+            $warehouseProduct = Mage::getModel('mc_warehouse/warehouse_product');
+            $warehouseProduct->loadFromInfo($productId, $warehouseId);
+
+            $qtyDiff = $newQty - $warehouseProduct->getStockQty();
+            $stock->setQty($stock->getQty() + $qtyDiff);
+
+            if ($stock->getQty() > 0) {
+                $stock->setIsInStock(1);
+            } else {
+                $stock->setIsInStock(0);
+            }
+
+            $stock->save();
+
+            $warehouseProduct->setProductId($productId);
+            $warehouseProduct->setWarehouseId($warehouseId);
+
+            $warehouseProduct->setStockQty($newQty);
+            $warehouseProduct->save();
         }
     }
 
