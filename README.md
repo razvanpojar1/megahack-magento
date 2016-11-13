@@ -6,8 +6,8 @@
 * [Claudiu Mărginean](https://github.com/claudiu-marginean)
 
 
-Problem scope(Romanian Description):
-Claudiu Mărginean
+Problem scope (Romanian Description):
+
 Background: 
  - datorită sistemului de licitații publice, ANAF nu poate decide fără licitații un curier anume care să facă expedițiile, deci pentru început produsele se vor rezerva și ridica din depozit.
 Challenge: 
@@ -21,7 +21,8 @@ tracking de stoc multi-warehouse la nivel de produs
  
 Modulul trebuie să fie realizat cu modman și să includă un fișier readme.md. Orice resurse (blocuri statice, atribute etc.) pe care le necesită modulul trebuiesc create prin script-urile de sql/install din modul. Modulul trebuie să includă traduceri de ro_RO și en_US.
 
-Problem scope(English Description):
+Problem scope (English Description):
+
 Background:
  - Thanks to public tenders, auctions ANAF can not decide without a specific courier to make shipments, so initially it will book and pick up products from the warehouse.
 Challenge:
