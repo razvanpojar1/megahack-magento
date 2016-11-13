@@ -57,7 +57,8 @@ The module must be done with modman and include a file readme.md. Any resources 
  
 # Uninstall
  - disable module from etc/modules/MagentoCrew_Warehouse.xml
- - remove 
+ - remove
+
  app/code/community/MagentoCrew/*
  app/design/frontend/base/default/layout/magentocrew/*   
  app/design/frontend/base/default/template/magentocrew/* 
