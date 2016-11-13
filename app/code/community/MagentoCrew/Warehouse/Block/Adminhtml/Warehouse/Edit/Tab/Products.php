@@ -149,13 +149,13 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products
      * @param int $warehouseId
      * @return MagentoCrew_Warehouse_Model_Resource_Warehouse_Product_Collection
      */
-    private function getWarehouseProducts()
+    public function getWarehouseProducts()
     {
         $warehouseProducts = Mage::getModel('mc_warehouse/warehouse_product')->getCollection();
         $warehouseProducts->addFieldToFilter('warehouse_id', array('eq' => (int)$this->getWarehouseId()));
         $warehouseProducts->load();
 
-        if (!$warehouseProducts->count()) {
+        if (!count($warehouseProducts)) {
             return array();
         }
 
@@ -163,7 +163,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products
         foreach ($warehouseProducts as $item) {
             $products[$item->getProductId()] = array('stock_qty' => $item->getStockQty());
         }
-
+        
         return $products;
     }
     

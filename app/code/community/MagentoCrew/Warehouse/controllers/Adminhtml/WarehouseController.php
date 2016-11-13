@@ -86,7 +86,7 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     public function saveAction()
     {
         if ($data = $this->getRequest()->getPost()) {
-
+            Mage::log($data);
             $warehouseModel = Mage::getModel('mc_warehouse/warehouse');
 
             if ($warehouseId = $this->getRequest()->getParam('id')) {
