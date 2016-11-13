@@ -54,7 +54,7 @@
             <adminhtml>
                 <args>
                     <modules>
-                        <warehouse after="Mage_Adminhtml">MagentoCrew_Warehouse_Adminhtml</warehouse>
+                        <warehouse before="Mage_Adminhtml">MagentoCrew_Warehouse_Adminhtml</warehouse>
                     </modules>
                 </args>
             </adminhtml>
