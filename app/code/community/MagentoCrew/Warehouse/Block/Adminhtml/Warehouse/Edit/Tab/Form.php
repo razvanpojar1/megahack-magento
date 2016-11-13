@@ -22,7 +22,7 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Form extends Mage
 
         $fieldset->addField('name', 'text', array(
             'label' => Mage::helper('mc_warehouse')->__('Name'),
-            'name'  => 'name',
+            'name'  => 'warehouse_name',
             'required' => true,
             'value' => $warehouseData->getName()
         ));

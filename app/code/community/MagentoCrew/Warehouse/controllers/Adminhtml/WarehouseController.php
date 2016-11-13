@@ -86,6 +86,8 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     public function saveAction()
     {
         if ($data = $this->getRequest()->getPost()) {
+            //Fix warehouse name save because in Products Tab the column name has the same input name
+            $data['name'] = $data['warehouse_name'];
 
             $warehouseId = $this->getRequest()->getParam('id');
             $warehouseModel = Mage::getModel('mc_warehouse/warehouse');
