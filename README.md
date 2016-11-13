@@ -32,8 +32,10 @@ multi-warehouse inventory tracking at the product level
 The module must be done with modman and include a file readme.md. Any resources (static blocks, attributes, etc.) that you require module must be created through SQL scripts / install mode. The module should include translations ro_RO and en_US.
 
 # Install Module
- - Install module using modman:
-   ```modman clone https://github.com/razvanpojar1/megahack-magento.git```
+ - Install module using modman: 
+```
+modman clone https://github.com/razvanpojar1/megahack-magento.git
+```   
  - Copy module archive  https://github.com/razvanpojar1/megahack-magento/archive/master.zip
  - Extract archive and place folder app from megahack-magento to magento root directory
  - Clear cache
