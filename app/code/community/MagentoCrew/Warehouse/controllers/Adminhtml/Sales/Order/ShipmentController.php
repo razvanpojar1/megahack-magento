@@ -69,8 +69,10 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
             $isNeedCreateLabel = isset($data['create_shipping_label']) && $data['create_shipping_label'];
 
 
+            $needRedirectEditPage = true;
             $this->_validateSingleWarehouse($shipment, $data);
             $this->_validateWarehouseStock($shipment, $data);
+            $needRedirectEditPage = false;
 
             $shipment->register();
             $comment = '';
@@ -127,6 +129,8 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
         }
         if ($isNeedCreateLabel) {
             $this->getResponse()->setBody($responseAjax->toJson());
+        } elseif ($needRedirectEditPage) {
+            $this->_redirect('*/sales_order_shipment/new', array('order_id' => $shipment->getOrderId()));
         } else {
             $this->_redirect('*/sales_order/view', array('order_id' => $shipment->getOrderId()));
         }
