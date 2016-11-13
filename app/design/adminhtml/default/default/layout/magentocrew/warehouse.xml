@@ -39,4 +39,13 @@
         </reference>
     </adminhtml_sales_order_shipment_new>
 
+    <adminhtml_sales_order_shipment_view>
+        <!-- Add warehouse used for the current shipment -->
+        <reference name="shipment_tracking">
+            <action method="setTemplate">
+                <template>magentocrew/warehouse/sales/order/shipment/view/tracking.phtml</template>
+            </action>
+        </reference>
+    </adminhtml_sales_order_shipment_view>
+
 </layout>
