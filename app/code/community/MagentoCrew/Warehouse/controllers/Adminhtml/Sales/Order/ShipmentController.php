@@ -203,7 +203,14 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
 
             if (!$warehouseItem->getId()) {
                 //Warehouse item was not found
-                $message = $this->_helper->__('The product %s is no longer available in the warehouse %s!', $item->getSku(), $warehouse->getName());
+                $message = $this->_helper->__('The product "%s" is no longer available in the warehouse "%s"!', $item->getName(), $warehouse->getName());
+                Mage::throwException($message);
+            }
+
+            if (!$warehouseItem->getStockQty() || $warehouseItem->getStockQty() < $item->getQty()) {
+                //Warehouse item was not found
+                $message = $this->_helper->__('The product "%s" stock quantity from the warehouse "%s" is insufficient! Stock qty is %d.',
+                    $item->getName(), $warehouse->getName(), $warehouseItem->getStockQty());
                 Mage::throwException($message);
             }
 
