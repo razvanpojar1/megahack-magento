@@ -45,6 +45,23 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
     }
 
     /**
+     * Initialize shipment items Warehouse ID
+     *
+     * @return array
+     * @throws Exception
+     */
+    protected function _getWarehouseIds()
+    {
+        $data = $this->getRequest()->getParam('shipment');
+        if (isset($data['warehouses'])) {
+            $warehouses = $data['warehouses'];
+        } else {
+            throw new Exception('Invalid warehouse parameters!');
+        }
+        return $warehouses;
+    }
+
+    /**
      * Save shipment
      * We can save only new shipment. Existing shipments are not editable
      *
@@ -70,8 +87,8 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
 
 
             $needRedirectEditPage = true;
-            $this->_validateSingleWarehouse($shipment, $data);
-            $this->_validateWarehouseStock($shipment, $data);
+            $this->_validateSingleWarehouse();
+            $this->_validateWarehouseStock($shipment);
             $needRedirectEditPage = false;
 
             $shipment->register();
@@ -141,20 +158,12 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
      *
      * - All products from a shipping should be shipped from one warehouse
      *
-     * @param array $data
      * @throws Mage_Core_Exception|Exception
      */
-    private function _validateSingleWarehouse($data)
+    private function _validateSingleWarehouse()
     {
-        $warehouses = null;
-        if (!isset($data['warehouses']) || !is_array($data['warehouses'])) {
-            throw new Exception('Invalid warehouse parameters!');
-        } elseif (!isset($data['items'])) {
-            return;
-        }
-
-        $warehouses = $data['warehouses'];
         $firstWarehouseId = null;
+        $warehouses = $this->_getWarehouseIds();
 
         foreach ($warehouses as $orderId => $warehouseId) {
             /** @var Mage_Sales_Model_Order_Shipment_Item $item */
@@ -172,19 +181,11 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
      * - The product selected to be shipped should have stock in that warehouse
      *
      * @param Mage_Sales_Model_Order_Shipment $shipment
-     * @param array $data
      * @throws Mage_Core_Exception|Exception
      */
-    private function _validateWarehouseStock($shipment, $data)
+    private function _validateWarehouseStock($shipment)
     {
-        $warehouses = null;
-        if (!isset($data['warehouses']) || !is_array($data['warehouses'])) {
-            throw new Exception('Invalid warehouse parameters!');
-        } elseif (!isset($data['items'])) {
-            return;
-        }
-
-        $warehouses = $data['warehouses'];
+        $warehouses = $this->_getWarehouseIds();
 
         foreach ($shipment->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Order_Shipment_Item $item */
