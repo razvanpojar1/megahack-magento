@@ -13,4 +13,17 @@ class MagentoCrew_Warehouse_Model_Warehouse_Product extends Mage_Core_Model_Abst
     {
         $this->_init('mc_warehouse/warehouse_product');
     }
+
+    /**
+     * Get Id based on info
+     *
+     * @param int $productId
+     * @param int $warehouseId
+     * @return int
+     */
+    public function loadFromInfo($productId, $warehouseId)
+    {
+        $id = $this->getResource()->getIdFromInfo($productId, $warehouseId);
+        return $this->load($id);
+    }
 }
