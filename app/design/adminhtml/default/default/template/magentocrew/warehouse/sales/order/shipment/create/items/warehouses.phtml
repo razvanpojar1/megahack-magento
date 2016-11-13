@@ -21,7 +21,7 @@ $warehouses = $this->getAvailableWarehouses();
         <?php if (count($warehouses)): ?>
             <strong class="nobr" style="padding-right: 10px ;"><?php echo $this->__('Ship from: ') ?></strong>
 
-            <select name="shipment[warehouses][598]" class="select required-entry">
+            <select name="shipment[warehouses][<?php echo $_item->getOrderItemId() ?>]" class="select required-entry">
                 <?php if (count($warehouses) > 1): ?>
                     <option value=""><?php echo $this->__('-- Please select warehouse --'); ?></option>
                 <?php endif; ?>
