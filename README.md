@@ -1,8 +1,12 @@
 # Magento Warehouse Module 
  - challenge e-commerce MegaHeck Cluj-Napoca 11-13 November 2016
- - by MagentoCrew (Razvan Pojar, Claudiu Margineanu, Marius Grad)
+ - by MagentoCrew:
+* [Răzvan Pojar](https://github.com/razvanpojar1)
+* [Marius Grad](https://github.com/mariuscris)
+* [Claudiu Mărginean](https://github.com/claudiu-marginean)
 
-Problem scope(Romanian Description):
+
+Problem scope (Romanian Description):
 
 Background: 
  - datorită sistemului de licitații publice, ANAF nu poate decide fără licitații un curier anume care să facă expedițiile, deci pentru început produsele se vor rezerva și ridica din depozit.
@@ -17,7 +21,8 @@ tracking de stoc multi-warehouse la nivel de produs
  
 Modulul trebuie să fie realizat cu modman și să includă un fișier readme.md. Orice resurse (blocuri statice, atribute etc.) pe care le necesită modulul trebuiesc create prin script-urile de sql/install din modul. Modulul trebuie să includă traduceri de ro_RO și en_US.
 
-Problem scope(English Description):
+Problem scope (English Description):
+
 Background:
  - Thanks to public tenders, auctions ANAF can not decide without a specific courier to make shipments, so initially it will book and pick up products from the warehouse.
 Challenge:
@@ -32,33 +37,41 @@ multi-warehouse inventory tracking at the product level
 The module must be done with modman and include a file readme.md. Any resources (static blocks, attributes, etc.) that you require module must be created through SQL scripts / install mode. The module should include translations ro_RO and en_US.
 
 # Install Module
- - Install module using modman:
-   modman clone https://github.com/razvanpojar1/megahack-magento.git
+ - Install module using modman: 
+```
+modman clone https://github.com/razvanpojar1/megahack-magento.git
+```   
  - Copy module archive  https://github.com/razvanpojar1/megahack-magento/archive/master.zip
- - extract archive and place folder app from megahack-magento to magento root directory
- - clear cache
+ - Extract archive and place folder app from megahack-magento to magento root directory
+ - Clear cache
  
 # Module Usage
  - Login to Magento admin interface of the website
- - check if module installed System->Configuration, left section Advanced->Advanced check if the module name "MagentoCrew_Warehouse" is enabled
- - add new warehouse in admin Catalog->Manage Warehouse, click button "Add warehouse". There you add information about warehouse and products for that warehouse and the stock quantity for each selected products
+ - Check if module installed System->Configuration, left section Advanced->Advanced check if the module name "MagentoCrew_Warehouse" is enabled
+ - Add new warehouse in admin Catalog->Manage Warehouse, click button "Add warehouse". There you add information about warehouse and products for that warehouse and the stock quantity for each selected products
 
 # Module Future improvements
- - email information about product and warehouse relation
- - stock rules for multiwarehouse on the same product
- - product warehouse import CSV and SOAP
- - multiselect on filters
- - magento enterprise support
+ - Email information about product and warehouse relation and show warehouse selected on shipment emails.
+ - Stock rules for multiwarehouse on the same product
+ - Product warehouse import CSV and SOAP
+   
+ - Multiselect on filters
+ - Magento enterprise support
  
 # Warnings
- - the frontend theme module implemantations is based on rwd theme and base theme. In case of custom themes, you need to have a look if the block name "catalog.leftnav" and "catalogsearch.leftnav" is used in custom theme implementations. Those names are replaced with "catalog.leftnav.extend" and "catalogsearch.leftnav.extend"
- - it will not work with custom modules on layer navigations
- - it will not work with custom modules on admin shipment page
+ - Diffecences from sum of qty on wrehouse level does not match the product stock level.
+ **This is not a bug, it is an undocumanded feature**
+ This is because, when you make an order the qty is reserved, substracted from product level stock qty. The warehouse stock level is updated/substracted when the shipment is made.   
+ - When implementing import from csv make sure you support stock qty update on product as well. The qty difference from new/olv values should be added to the product stock qty.
+ - The frontend theme module implemantations is based on rwd theme and base theme. In case of custom themes, you need to have a look if the block name "catalog.leftnav" and "catalogsearch.leftnav" is used in custom theme implementations. Those names are replaced with "catalog.leftnav.extend" and "catalogsearch.leftnav.extend"
+ - It will not work with custom modules on layer navigations
+ - It will not work with custom modules on admin shipment page
+ 
  
 # Uninstall
  - disable module from etc/modules/MagentoCrew_Warehouse.xml
- - remove
-
+ - Delete the following files:
+```
  app/code/community/MagentoCrew/*
  app/design/frontend/base/default/layout/magentocrew/*   
  app/design/frontend/base/default/template/magentocrew/* 
@@ -67,9 +80,12 @@ The module must be done with modman and include a file readme.md. Any resources 
  app/design/adminhtml/default/default/template/magentocrew/warehouse*    
  app/locale/ro_RO/MagentoCrew_Warehouse.csv                                     
  app/locale/en_US/MagentoCrew_Warehouse.csv                                         
- app/etc/modules/MagentoCrew_Warehouse.xml  
- - remove custom theme implemenations from theme if it's the case
- - drop table from SQL
-  - warehouse
-  -warehouse_product
- - remove column warehouse_id from table sales_flat_order_shipment
+ app/etc/modules/MagentoCrew_Warehouse.xml
+ ```
+ - Remove custom theme implemenations from theme if it's the case
+ - Drop the following tables from SQL
+```
+warehouse
+warehouse_product
+```  
+ - Remove column `warehouse_id` from table `sales_flat_order_shipment`
