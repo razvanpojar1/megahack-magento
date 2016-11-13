@@ -87,9 +87,31 @@ class MagentoCrew_Warehouse_Adminhtml_WarehouseController extends Mage_Adminhtml
     {
         if ($data = $this->getRequest()->getPost()) {
 
+            $warehouseId = $this->getRequest()->getParam('id');
             $warehouseModel = Mage::getModel('mc_warehouse/warehouse');
+            $warehouseProductsModel = Mage::getModel('mc_warehouse/warehouse_product');
 
-            if ($warehouseId = $this->getRequest()->getParam('id')) {
+            $links = $this->getRequest()->getPost('links');
+
+            if (isset($links['related'])) {
+                $decodedSerialize = Mage::helper('adminhtml/js')->decodeGridSerializedInput($links['related']);
+
+                foreach ($decodedSerialize as $productId => $v) {
+                    $productSelected = Mage::getModel('catalog/product')->load($productId);
+                    $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($productSelected);
+                    $stock->setQty($stock->getQty() + $v['stock_qty']);
+                    $stock->save();
+
+                    if ($warehouseProductsModel->loadFromInfo($productId, $warehouseId)) {
+//                        $warehouseProductsModel->setProductId($productId);
+//                        $warehouseProductsModel->setStockQty($v['stock_qty']);
+//                        $warehouseProductsModel->save();
+                    }
+
+                }
+            }
+
+            if ($warehouseId) {
                 $warehouseModel->setData($data)
                     ->setId($warehouseId);
             } else {
