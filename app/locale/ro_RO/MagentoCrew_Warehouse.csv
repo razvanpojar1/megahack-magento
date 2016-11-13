@@ -19,3 +19,4 @@
 "-- Please select warehouse --","-- Alegeți un depozit --"
 "This product is no longer available in any warehouses!","Acest produs nu mai este disponibil în nici un depozit!"
 "The shipment needs to be done only from one warehouse!","O livrare trebuie făcută doar dintr-un singur depozit!"
+"The product %s is no longer available in the warehouse %s!","Produsul %s nu mai este disponibil în depozitul %s!"

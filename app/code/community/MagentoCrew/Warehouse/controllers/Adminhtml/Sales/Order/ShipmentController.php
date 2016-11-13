@@ -141,11 +141,10 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
      *
      * - All products from a shipping should be shipped from one warehouse
      *
-     * @param Mage_Sales_Model_Order_Shipment $shipment
      * @param array $data
      * @throws Mage_Core_Exception|Exception
      */
-    private function _validateSingleWarehouse($shipment, $data)
+    private function _validateSingleWarehouse($data)
     {
         $warehouses = null;
         if (!isset($data['warehouses']) || !is_array($data['warehouses'])) {
@@ -165,9 +164,6 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
                 Mage::throwException($this->_helper->__('The shipment needs to be done only from one warehouse!'));
             }
         }
-
-
-
     }
 
     /**
@@ -181,7 +177,6 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
      */
     private function _validateWarehouseStock($shipment, $data)
     {
-        $items = null;
         $warehouses = null;
         if (!isset($data['warehouses']) || !is_array($data['warehouses'])) {
             throw new Exception('Invalid warehouse parameters!');
@@ -189,14 +184,13 @@ class MagentoCrew_Warehouse_Adminhtml_Sales_Order_ShipmentController extends Mag
             return;
         }
 
-        $items = $data['items'];
         $warehouses = $data['warehouses'];
 
         foreach ($shipment->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Order_Shipment_Item $item */
 
             if (!isset($warehouses[$item->getOrderItemId()])) {
-                throw new Exception('Invalid warehouse parameter for order item SKP: ' . $item->getOrderItemId());
+                throw new Exception('Invalid warehouse parameter for order item SKP: ' . $item->getSku());
             }
             $warehouseId = $warehouses[$item->getOrderItemId()];
 

@@ -19,3 +19,4 @@
 "-- Please select warehouse --","-- Please select warehouse --"
 "This product is no longer available in any warehouses!","This product is no longer available in any warehouses!"
 "The shipment needs to be done only from one warehouse!","The shipment needs to be done only from one warehouse!"
+"The product %s is no longer available in the warehouse %s!","The product %s is no longer available in the warehouse %s!"
