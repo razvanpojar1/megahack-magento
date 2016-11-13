@@ -46,4 +46,29 @@ The module must be done with modman and include a file readme.md. Any resources 
 # Module Future improvements
  - email information about product and warehouse relation
  - stock rules for multiwarehouse on the same product
+ - product warehouse import CSV and SOAP
+ - multiselect on filters
+ - magento enterprise support
  
+# Warnings
+ - the frontend theme module implemantations is based on rwd theme and base theme. In case of custom themes, you need to have a look if the block name "catalog.leftnav" and "catalogsearch.leftnav" is used in custom theme implementations. Those names are replaced with "catalog.leftnav.extend" and "catalogsearch.leftnav.extend"
+ - it will not work with custom modules on layer navigations
+ - it will not work with custom modules on admin shipment page
+ 
+# Uninstall
+ - disable module from etc/modules/MagentoCrew_Warehouse.xml
+ - remove 
+ app/code/community/MagentoCrew/*
+ app/design/frontend/base/default/layout/magentocrew/*   
+ app/design/frontend/base/default/template/magentocrew/* 
+ app/design/adminhtml/default/default/layout/magentocrew/warehouse.xml
+ app/design/adminhtml/default/default/layout/magentocrew/warehouse.xml
+ app/design/adminhtml/default/default/template/magentocrew/warehouse*    
+ app/locale/ro_RO/MagentoCrew_Warehouse.csv                                     
+ app/locale/en_US/MagentoCrew_Warehouse.csv                                         
+ app/etc/modules/MagentoCrew_Warehouse.xml  
+ - remove custom theme implemenations from theme if it's the case
+ - drop table from SQL
+  - warehouse
+  -warehouse_product
+ - remove column warehouse_id from table sales_flat_order_shipment
