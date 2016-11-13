@@ -82,15 +82,15 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products
         ));
 
         $this->addColumn('stock_qty', array(
-            'header'                    => Mage::helper('catalog')->__('Stock Qty'),
+            'header'                    => Mage::helper('mc_warehouse')->__('Stock Qty'),
             'name'                      => 'stock_qty',
             'type'                      => 'number',
             'validate_class'            => 'validate-number',
             'index'                     => 'stock_qty',
             'width'                     => 60,
-            'filter_condition_callback' => array($this, '_addLinkModelFilterCallback')
+            'editable'                  => 1,
+            'filter_condition_callback' => array($this, '_addWarehouseModelFilterCallback')
         ));
-
 
         return parent::_prepareColumns();
     }
@@ -116,7 +116,14 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products
     {
         $collection = Mage::getModel('catalog/product')->getCollection()
             ->addAttributeToSelect('*');
-
+        
+        $collection->getSelect()
+            ->joinLeft(
+                array('warehouse_product' => $collection->getResource()->getTable('mc_warehouse/warehouse_product')),
+                'warehouse_product.product_id = e.entity_id and warehouse_product.warehouse_id = '.(int)$this->getWarehouseId(),
+                array('warehouse_product.stock_qty')
+            );
+        
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
@@ -195,5 +202,4 @@ class MagentoCrew_Warehouse_Block_Adminhtml_Warehouse_Edit_Tab_Products
         }
         return $this;
     }
-
 }
